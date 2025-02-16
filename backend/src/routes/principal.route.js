@@ -1,5 +1,5 @@
 import express from 'express'
-import { deletePrincipal, principalLogin, principalSignup, updatePrincipal } from '../controllers/principal.controller.js'
+import { deletePrincipal, getPrincipals, principalLogin, principalSignup, updatePrincipal } from '../controllers/principal.controller.js'
 
 
 const router = express.Router()
@@ -10,8 +10,8 @@ router.post('/principal/login', principalLogin)
 
 
 // admin control Or principal controll
-router.post('/principal/update/:_id', updatePrincipal)
-router.post('/principal/delete/:_id', deletePrincipal)
-
+router.patch('/principal/update/:_id', updatePrincipal)
+router.delete('/principal/delete/:_id', deletePrincipal)
+router.get('/principal/get', getPrincipals)
 export default router
 

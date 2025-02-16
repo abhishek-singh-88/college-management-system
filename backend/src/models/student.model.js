@@ -9,7 +9,7 @@ const studentSchema = new mongoose.Schema({
     email:{
         type:String,
         required:true,
-        uniqu:true
+        unique:true
     },
     password:{
         type:String,
@@ -34,7 +34,11 @@ const studentSchema = new mongoose.Schema({
         type:String,
         required:true,
         unique:true,
-    } 
+    } , 
+    collegeCode: {
+        type:Number, 
+        required: true,
+    }
 
 }, {timestamps:true})
 

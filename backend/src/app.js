@@ -8,7 +8,7 @@ import adminRoutes from './routes/admin.route.js'
 import studentRoutes from './routes/student.route.js'
 import teacherRoutes from './routes/teacher.route.js'
 import principalRoutes from './routes/principal.route.js'
-
+import forgetRoutes from './routes/forget.password.routes.js'
 
 // express app 
 const app = express();
@@ -31,6 +31,7 @@ app.use(adminRoutes)
 app.use(studentRoutes)
 app.use(teacherRoutes)
 app.use(principalRoutes)
+app.use(forgetRoutes)
 
 
 
@@ -40,3 +41,15 @@ app.listen(process.env.PORT, () => {
   console.log(`server is running on http://localhost:${process.env.PORT}`);
   connectDB();
 });
+
+
+
+
+
+
+
+
+
+
+
+
