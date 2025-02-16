@@ -28,7 +28,7 @@ export const teacherLogin = async(req, res)=>{
             if(!match){
                 return res.status(404).json({message:"Invalid password ! ", error:true})
             }else{
-                const token = await jwt.sign({id: teacher._id, teacher}, process.env.JWT_SECRET_TEACHER, {expiresIn:'30d'})
+                const token = await jwt.sign({id: teacher._id, name: teacher.name, email: teacher.email}, process.env.JWT_SECRET_TEACHER, {expiresIn:'30d'})
                 res.cookie('token', token, {maxAge:30*24*60*60*1000})
                 res.status(200).json({message:"Logged in successfully ! ", error:false, teacher })
             }

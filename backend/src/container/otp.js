@@ -67,6 +67,8 @@ function sendOtp(email, name) {
         
     }
   })
+
+  return otp
 }
 
 
