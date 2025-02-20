@@ -27,7 +27,8 @@ export const adminLogin = async(req, res)=>{
             res.status(404).json({message:"Invalid credentials ! ", error:true})
           }else{
             const token = await jwt.sign({id: admin._id, email: admin.email}, process.env.JWT_SECRET_ADMIN, {expiresIn:"365d"})
-            res.cookie('token', token, {maxAge:365*24*60*60*1000})
+            const user = { token, type:'admin'}
+            res.cookie('user', user, {maxAge:365*24*60*60*1000})
             res.status(200).json({message:`Hi ${admin.name.split(" ")[0]} welcome to the world of CMS  ! `})
           }
         }

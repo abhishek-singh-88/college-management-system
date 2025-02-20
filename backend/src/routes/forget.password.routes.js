@@ -6,8 +6,8 @@ import {  newPassword, sendOtp,  verifyOtp } from '../controllers/forget.control
 const router = express.Router()
 
 router.post('/send-otp', sendOtp)
-router.post('/verify-otp', verifyOtp)
-router.post('/forget-password', newPassword )
+router.post('/verify-otp', verifyOtp)                           
+router.patch('/forget-password', newPassword )
 
 
 

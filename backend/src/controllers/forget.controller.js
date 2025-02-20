@@ -5,23 +5,23 @@ import Principal from "../models/principal.model.js";
 import Teacher from "../models/teacher.model.js";
 import bcrypt from 'bcryptjs'
 
+
 export const sendOtp = async (req, res) => {
   try {
-    const { mode } = req.body;
-    const token = req.cookies.token;
+    const user = req.cookies.user;
     let secret = "";
     let person;
-    if (mode == "student") {
+    if (user.type == "student") {
       secret = process.env.JWT_SECRET_STUDENT;
       person = Student;
-    } else if (mode == "teacher") {
+    } else if (user.type == "teacher") {
       secret = process.env.JWT_SECRET_TEACHER;
       person = Teacher;
-    } else {
+    }else{
       secret = process.env.JWT_SECRET_PRINCIPAL;
       person = Principal;
     }
-    const info = jwt.verify(token, secret);
+    const info = jwt.verify(user.token, secret);
     const otp = sendMail(info.email, info.name);
     await person.findByIdAndUpdate(
       { _id: info.id },
@@ -46,23 +46,31 @@ export const sendOtp = async (req, res) => {
 
 export const verifyOtp = async (req, res) => {
   try {
-    const { otp, mode } = req.body;
+    const { otp } = req.body;
+    const user = req.cookies.user
 
     let secret = "";
     let person;
-    if (mode == "student") {
+    if (user.type == "student") {
       secret = process.env.JWT_SECRET_STUDENT;
       person = Student;
-    } else if (mode == "teacher") {
+    } else if (user.type == "teacher") {
       secret = process.env.JWT_SECRET_TEACHER;
       person = Teacher;
     } else {
       secret = process.env.JWT_SECRET_PRINCIPAL;
       person = Principal;
     }
-    const info = jwt.verify(token, secret);
-    let data = person.findOne({ email: info.email });
+    const info = jwt.verify(user.token, secret);
+    let data = await person.findOne({ email: info.email });
+    console.log(data.otp);
+    console.log(data.expiresAt);
+    console.log(Date.now());
+    
+    
+    
     if (data.otp == otp && data.expiresAt > Date.now()) {
+
       res.status(200).json({ message: "OTP verified successfully ! " });
     } else {
       res.status(400).json({ message: "Invalid OTP / expired / wrong " });
@@ -76,23 +84,36 @@ export const verifyOtp = async (req, res) => {
 
 export const newPassword = async (req, res) => {
   try {
-    const { email, password, mode } = req.body;
+    const { password } = req.body;
+    const user = req.cookies.user
+
+    let secret = "";
     let person;
-    if (mode == "student") {
+    if (user.type == "student") {
+      secret = process.env.JWT_SECRET_STUDENT;
       person = Student;
-    } else if (mode == "teacher") {
+    } else if (user.type == "teacher") {
+      secret = process.env.JWT_SECRET_TEACHER;
       person = Teacher;
     } else {
+      secret = process.env.JWT_SECRET_PRINCIPAL;
       person = Principal;
     }
-    let user = await person.find({email})
-    if(!user){
-        res.status(404).json({message:"sorry we can not find any user with this email"})
-    }else{
-       const hashPass =  bcrypt.hashSync(password, 10)
-       await person.updateOne({email}, {password:hashPass})
+    const info = jwt.verify(user.token, secret);
+    
+     const data  = await person.findOne({email:info.email})  
+
+        // res.status(404).json({message:"sorry we can not find any user with this email"})
+      if(data){
+        const hashPass =  bcrypt.hashSync(password, 10)
+        const updated =  await person.findOneAndUpdate({email:info.email},{password:hashPass})
+        // console.log(updated);
         res.status(200).json({message:"Your password has changed successfully ! "})
-    }
+      }else{
+        res.status(200).json({message:" "})
+      }
+     
+ 
   } catch (error) {
     console.log("error in newPassword controller : ", error.message);
     res.status(500).json({ message: "Internal server error ! " });

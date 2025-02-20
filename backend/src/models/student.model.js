@@ -38,6 +38,12 @@ const studentSchema = new mongoose.Schema({
     collegeCode: {
         type:Number, 
         required: true,
+    },
+    otp:{
+        type:Number
+    },
+    expiresAt:{
+        type:Number
     }
 
 }, {timestamps:true})

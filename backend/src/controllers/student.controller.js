@@ -27,7 +27,8 @@ export const studentLogin = async(req, res)=>{
             res.status(404).json({message:"Invalid password ! ", error:true})
           }else{
             const token = await jwt.sign({id: student._id, email: student.email, name: student.name}, process.env.JWT_SECRET_STUDENT, {expiresIn:"7d"})
-            res.cookie('token', token, {maxAge:7*24*60*60*1000})
+            const user = { token, type:'student'}
+            res.cookie('user', user, {maxAge:7*24*60*60*1000})
             res.status(200).json({message:`Hi ${student.name.split(" ")[0]} welcome to the world of CMS  ! `, error:false})
           }
         }

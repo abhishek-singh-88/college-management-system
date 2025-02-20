@@ -27,7 +27,13 @@ const principalSchema = new mongoose.Schema({
         type:String,
         required:true,
         unique:true,
-    } 
+    } ,
+    otp:{
+        type:Number
+    },
+    expiresAt:{
+        type:Number
+    }
 
 },{timestamps:true})
 
